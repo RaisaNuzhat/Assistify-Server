@@ -43,6 +43,14 @@ async function run() {
             console.log(result)
             res.send(result)
         })
+        //get by id
+        app.get('/volunteers/:id',async(req,res) =>
+            {
+                const id = req.params.id
+                const query = {_id: new ObjectId(id)}
+                const result = await volunteerCollection.findOne(query)
+                res.send(result)
+            })
           // email filtering
       app.get('/volunteer/:orgemail',async(req,res) =>
         {
