@@ -36,12 +36,13 @@ async function run() {
     //await client.connect();
     const volunteerCollection = client.db("assistify").collection("volunteers");
     //get all volunteers
-    //  app.get('/volunteers',async(req,res) =>
-    //     {
-    //         const cursor = volunteerCollection.find()
-    //         const result = await cursor.toArray()
-    //         res.send(result)
-    //     })
+      app.get('/volunteers',async(req,res) =>
+        {
+            const cursor = volunteerCollection.find()
+            const result = await cursor.toArray()
+            console.log(result)
+            res.send(result)
+        })
           // email filtering
       app.get('/volunteer/:orgemail',async(req,res) =>
         {
