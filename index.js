@@ -35,6 +35,29 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     //await client.connect();
     const volunteerCollection = client.db("assistify").collection("volunteers");
+    //get all volunteers
+     app.get('/volunteers',async(req,res) =>
+        {
+            const cursor = volunteerCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+          // email filtering
+      app.get('/volunteer/:orgemail',async(req,res) =>
+        {
+            console.log(req.params.orgemail)
+            const result = await volunteerCollection.find({orgemail: req.params.orgemail}).toArray()
+            console.log(result)
+            res.send(result)
+        })
+        //add volunteers
+        app.post('/volunteers',async(req,res) =>
+            {
+                const volunteer = req.body
+                console.log('new volunteer',volunteer)
+                const result = await volunteerCollection.insertOne(volunteer);
+                res.send(result)
+            })
    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
