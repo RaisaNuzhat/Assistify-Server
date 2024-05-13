@@ -35,7 +35,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     //await client.connect();
     const volunteerCollection = client.db("assistify").collection("volunteers");
-    const volunteerRequestCollection = client.db("assistify").collection("Requests");
+    const volunteerRequestCollection = client.db("assistify").collection("requests");
     //get all volunteers
       app.get('/volunteers',async(req,res) =>
         {
@@ -60,6 +60,14 @@ async function run() {
             console.log(result)
             res.send(result)
         })
+        //request email filtering
+        app.get('/request/:vemail',async(req,res) =>
+          {
+              console.log(req.params.vemail)
+              const result = await volunteerRequestCollection.find({vemail: req.params.vemail}).toArray()
+              console.log(result)
+              res.send(result)
+          })
         //add volunteers
         app.post('/volunteers',async(req,res) =>
             {
@@ -71,9 +79,9 @@ async function run() {
              //add volunteer requests
         app.post('/requests',async(req,res) =>
           {
-              const request = req.body
-              console.log('new request',request)
-              const result = await volunteerRequestCollection.insertOne(request);
+              const requestVolunteer = req.body
+              console.log('new request',requestVolunteer)
+              const result = await volunteerRequestCollection.insertOne(requestVolunteer);
               res.send(result)
           })
    
