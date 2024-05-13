@@ -52,6 +52,37 @@ async function run() {
                 const result = await volunteerCollection.findOne(query)
                 res.send(result)
             })
+
+            //get all data for search and sort
+            // app.get('/allposts',async(req,res) =>
+            //   {
+            //     const sort = req.query.sort
+            //     let options ={}
+            //     if(sort) options ={ sort: {deadline: sort ==='asce' ? 1 : -1}}
+            //     const result = await volunteerCollection
+            //     .find(options)
+            //     .toArray()
+                
+            //     res.send(result)
+            //   })
+            app.get('/allposts', async (req, res) => {
+              const sort = req.query.sort;
+              let sortOptions = {};
+              if (sort) {
+                  sortOptions = { deadline: sort === 'asce' ? 1 : -1 };
+              }
+              try {
+                  const result = await volunteerCollection
+                      .find({})
+                      .sort(sortOptions)
+                      .toArray();
+                  res.send(result);
+              } catch (error) {
+                  console.error("Error fetching data:", error);
+                  res.status(500).send("Internal Server Error");
+              }
+          });
+          
         //update need volunteer post
         app.put('/volunteers/:id',async(req,res) =>
           {
@@ -82,6 +113,13 @@ async function run() {
             const result = await volunteerCollection.deleteOne(query)
             res.send(result) 
         })
+        app.delete('/request/:id',async(req,res) =>
+          {
+              const id = req.params.id
+              const query = {_id: new ObjectId(id)}
+              const result = await volunteerRequestCollection.deleteOne(query)
+              res.send(result) 
+          })
 
           // email filtering
       app.get('/volunteer/:orgemail',async(req,res) =>
