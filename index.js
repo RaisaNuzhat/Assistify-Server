@@ -35,6 +35,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     //await client.connect();
     const volunteerCollection = client.db("assistify").collection("volunteers");
+    const volunteerRequestCollection = client.db("assistify").collection("Requests");
     //get all volunteers
       app.get('/volunteers',async(req,res) =>
         {
@@ -67,6 +68,14 @@ async function run() {
                 const result = await volunteerCollection.insertOne(volunteer);
                 res.send(result)
             })
+             //add volunteer requests
+        app.post('/requests',async(req,res) =>
+          {
+              const request = req.body
+              console.log('new request',request)
+              const result = await volunteerRequestCollection.insertOne(request);
+              res.send(result)
+          })
    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
