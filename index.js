@@ -52,6 +52,29 @@ async function run() {
                 const result = await volunteerCollection.findOne(query)
                 res.send(result)
             })
+//update need volunteer post
+app.put('/volunteers/:id',async(req,res) =>
+  {
+      const id = req.params.id
+      const filter = {_id: new ObjectId(id)}
+      const options ={upsert : true}
+      const updatedpost = req.body
+      const updated = {
+        $set:{
+            spotname:updatedpost.posttitle,
+            image:updatedpost.image,
+            location:updatedpost.location,
+            description:updatedpost.description,
+            noofvolunteers:updatedpost.noofvolunteers,
+            category:updatedpost.category,
+            deadline:updatedpost.deadline,
+           
+        }
+      }
+      const result = await volunteerCollection.updateOne(filter,updated,options)
+      res.send(result)
+      })
+
           // email filtering
       app.get('/volunteer/:orgemail',async(req,res) =>
         {
