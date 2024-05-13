@@ -67,13 +67,18 @@ async function run() {
             //   })
             app.get('/allposts', async (req, res) => {
               const sort = req.query.sort;
+              const search = req.query.search;
+              let query = {};
+              if (search) {
+                  query = { posttitle: { $regex: search, $options: 'i' } };
+              }
               let sortOptions = {};
               if (sort) {
                   sortOptions = { deadline: sort === 'asce' ? 1 : -1 };
               }
               try {
                   const result = await volunteerCollection
-                      .find({})
+                      .find(query) 
                       .sort(sortOptions)
                       .toArray();
                   res.send(result);
