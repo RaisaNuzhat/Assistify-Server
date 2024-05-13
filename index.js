@@ -56,7 +56,18 @@ async function run() {
         }
       ).send({success: true})
     })
-
+     //clearing token
+     app.get('/logout',(req,res)=>
+    {
+      res.clearCookie('token',
+      {
+        httpOnly:true,
+        secure:process.env.NODE_ENV==='production',
+        sameSite:process.env.NODE_ENV==='production'?'none':'strict',
+        maxAge:0,
+      }
+    ).send({success: true})
+    })
     //get all volunteers
       app.get('/volunteers',async(req,res) =>
         {
