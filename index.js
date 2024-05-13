@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 
@@ -36,6 +37,19 @@ async function run() {
     //await client.connect();
     const volunteerCollection = client.db("assistify").collection("volunteers");
     const volunteerRequestCollection = client.db("assistify").collection("requests");
+    //jwt generate
+    app.post('/jwt',async(req,res)=>
+    {
+      const user = req.body
+      const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn:'365d'
+        }
+       
+      )
+      res.send({token})
+    })
+
     //get all volunteers
       app.get('/volunteers',async(req,res) =>
         {
@@ -52,19 +66,6 @@ async function run() {
                 const result = await volunteerCollection.findOne(query)
                 res.send(result)
             })
-
-            //get all data for search and sort
-            // app.get('/allposts',async(req,res) =>
-            //   {
-            //     const sort = req.query.sort
-            //     let options ={}
-            //     if(sort) options ={ sort: {deadline: sort ==='asce' ? 1 : -1}}
-            //     const result = await volunteerCollection
-            //     .find(options)
-            //     .toArray()
-                
-            //     res.send(result)
-            //   })
             app.get('/allposts', async (req, res) => {
               const sort = req.query.sort;
               const search = req.query.search;
